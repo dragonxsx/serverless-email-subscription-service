@@ -1,15 +1,22 @@
-service: aws-node-daily-inspiration-email-service
+service: aws-node-daily-inspiration
 frameworkVersion: '3'
 
 custom:
   tableName: 'users-table-${sls:stage}'
+  region: ${self:provider.region}
 
 provider:
   name: aws
   runtime: nodejs14.x
+  region: us-east-1
+  profile: serverless-admin
+  stage: dev
   iam:
     role:
       statements:
+        - Effect: Allow
+          Action: "s3:*"
+          Resource: "*"
         - Effect: Allow
           Action:
             - dynamodb:Query
@@ -22,6 +29,7 @@ provider:
             - Fn::GetAtt: [ UsersTable, Arn ]
   environment:
     USERS_TABLE: ${self:custom.tableName}
+    REGION: ${self:custom.region}
 
 functions:
   api:
