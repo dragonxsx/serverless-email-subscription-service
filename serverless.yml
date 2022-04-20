@@ -32,11 +32,13 @@ provider:
     REGION: ${self:custom.region}
 
 functions:
-  api:
-    handler: handler.handler
+  quotes:
+    handler: handler/getQuotes.getQuotes
     events:
-      - httpApi: '*'
-
+      - http:
+          path: quotes
+          method: GET
+          cors: true
 resources:
   Resources:
     UsersTable:
