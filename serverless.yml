@@ -2,7 +2,7 @@ service: aws-node-daily-inspiration
 frameworkVersion: '3'
 
 custom:
-  tableName: 'users-table-${sls:stage}'
+  tableName: 'email-service-users-table-${sls:stage}'
   region: ${self:provider.region}
 
 provider:
@@ -38,6 +38,13 @@ functions:
       - http:
           path: quotes
           method: GET
+          cors: true
+  subscribe: 
+    handler: handler/subscribeUser.subscribeUser
+    events:
+      - http:
+          path: subscribe
+          method: POST
           cors: true
 resources:
   Resources:
