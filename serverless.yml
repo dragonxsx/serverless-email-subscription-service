@@ -15,6 +15,9 @@ provider:
     role:
       statements:
         - Effect: Allow
+          Action: SNS:Publish
+          Resource: !Ref QuotesMessages
+        - Effect: Allow
           Action: "s3:*"
           Resource: "*"
         - Effect: Allow
@@ -48,6 +51,22 @@ functions:
           cors: true
 resources:
   Resources:
+    QuotesMessages:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: quotes-messages-${self:provider.stage}
+    QuotesMessagesSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: !Ref QuotesMessages
+        Protocol: email
+        Endpoint: vina@mailinator.com
+        DeliveryPolicy:
+          healthyRetryPolicy:
+            numRetries: 20
+            minDelayTarget: 30
+            maxDelayTarget: 600
+            backoffFunction: exponential
     UsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
