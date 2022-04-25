@@ -65,6 +65,7 @@ functions:
           path: send-email
           method: post
           cors: true
+      - schedule: cron(0 13 * * ? *)
   getSubscribers:
     handler: handler/getSubscribers.getSubscribers
     events:
